@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AHJ Chat</title>
+  </head>
+  <body>
+    <!-- Модальное окно регистрации никнейма -->
+    <div class="modal-overlay" id="modal">
+      <div class="modal">
+        <h2 class="modal__title">Выберите псевдоним</h2>
+        <form class="modal__form" id="nickname-form" novalidate>
+          <input
+            class="modal__input"
+            id="nickname-input"
+            type="text"
+            placeholder="Ваш никнейм"
+            autocomplete="off"
+            autofocus
+          />
+          <div class="modal__error" id="modal-error"></div>
+          <div class="modal__actions">
+            <button type="submit" class="btn btn_primary">Продолжить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Окно чата -->
+    <div class="chat-container" id="chat" hidden>
+      <aside class="chat-sidebar">
+        <h3 class="chat-sidebar__title">Участники</h3>
+        <ul class="user-list" id="user-list"></ul>
+      </aside>
+      <main class="chat-main">
+        <div class="chat-messages" id="messages"></div>
+        <form class="chat-input" id="message-form">
+          <input
+            class="chat-input__field"
+            id="message-input"
+            type="text"
+            placeholder="Введите сообщение..."
+            autocomplete="off"
+          />
+          <button type="submit" class="btn btn_primary">Отправить</button>
+        </form>
+      </main>
+    </div>
+  </body>
+</html>
