@@ -1,0 +1,207 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5;
+  height: 100vh;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn_primary {
+  background: #4a76d1;
+  color: #fff;
+}
+
+.btn_primary:hover {
+  background: #3a5fb0;
+}
+
+/* --- Модальное окно --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  width: 360px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.modal__title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal__input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.modal__input:focus {
+  outline: none;
+  border-color: #4a76d1;
+}
+
+.modal__error {
+  display: none;
+  color: #d33;
+  font-size: 13px;
+}
+
+.modal__error.visible {
+  display: block;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* --- Окно чата --- */
+.chat-container {
+  display: flex;
+  height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+}
+
+.chat-sidebar {
+  width: 240px;
+  border-right: 1px solid #e3e5e8;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.chat-sidebar__title {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.user-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-list__item {
+  padding: 8px 12px;
+  background: #f4f6fa;
+  border-radius: 8px;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.user-list__item_you {
+  background: #e2ebff;
+  font-weight: 600;
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-messages__system {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
+/* --- Сообщения --- */
+.message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  word-break: break-word;
+}
+
+.message_other {
+  align-self: flex-start;
+  background: #f1f3f6;
+}
+
+.message_own {
+  align-self: flex-end;
+  background: #d7e4ff;
+}
+
+.message__header {
+  font-size: 12px;
+  color: #7a8494;
+  margin-bottom: 4px;
+}
+
+.message_own .message__header {
+  text-align: right;
+}
+
+.message__text {
+  font-size: 14px;
+}
+
+/* --- Поле ввода --- */
+.chat-input {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid #e3e5e8;
+}
+
+.chat-input__field {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.chat-input__field:focus {
+  outline: none;
+  border-color: #4a76d1;
+}
