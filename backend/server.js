@@ -31,6 +31,8 @@ app.post("/new-user", async (request, response) => {
       message: "This name is already taken!",
     };
     response.status(400).send(JSON.stringify(result)).end();
+    // прекращаем обработку, иначе в userState попадёт пользователь с name: undefined
+    return;
   }
   const { name } = request.body;
   const isExist = userState.find((user) => user.name === name);
@@ -58,20 +60,45 @@ app.post("/new-user", async (request, response) => {
 
 const server = http.createServer(app);
 const wsServer = new WebSocketServer({ server });
+
+const broadcastUserList = () => {
+  [...wsServer.clients]
+    .filter((o) => o.readyState === WebSocket.OPEN)
+    .forEach((o) => o.send(JSON.stringify(userState)));
+};
+
+const removeUser = (name) => {
+  const idx = userState.findIndex((user) => user.name === name);
+  if (idx === -1) {
+    return false;
+  }
+  userState.splice(idx, 1);
+  return true;
+};
+
 wsServer.on("connection", (ws) => {
   ws.on("message", (msg, isBinary) => {
-    const receivedMSG = JSON.parse(msg);
+    let receivedMSG;
+    try {
+      receivedMSG = JSON.parse(msg);
+    } catch (error) {
+      // битый пакет от клиента не должен ронять процесс
+      logger.error(`Invalid JSON received: ${error.message}`);
+      return;
+    }
     logger.info(`Message received: ${JSON.stringify(receivedMSG)}`);
+    // привязываем пользователя к соединению, чтобы удалить его при разрыве
+    if (receivedMSG.user) {
+      ws.user = receivedMSG.user;
+    }
     // обработка выхода пользователя
     if (receivedMSG.type === "exit") {
-      const idx = userState.findIndex(
-        (user) => user.name === receivedMSG.user.name
-      );
-      userState.splice(idx, 1);
-      [...wsServer.clients]
-        .filter((o) => o.readyState === WebSocket.OPEN)
-        .forEach((o) => o.send(JSON.stringify(userState)));
-      logger.info(`User with name "${receivedMSG.user.name}" has been deleted`);
+      if (removeUser(receivedMSG.user.name)) {
+        broadcastUserList();
+        logger.info(
+          `User with name "${receivedMSG.user.name}" has been deleted`
+        );
+      }
       return;
     }
     // обработка отправки сообщения
@@ -82,6 +109,16 @@ wsServer.on("connection", (ws) => {
       logger.info("Message sent to all users");
     }
   });
+
+  ws.on("close", () => {
+    // удаляем пользователя из списка даже при обрыве соединения
+    // (когда клиент не успел отправить сообщение exit)
+    if (ws.user && removeUser(ws.user.name)) {
+      broadcastUserList();
+      logger.info(`User with name "${ws.user.name}" disconnected`);
+    }
+  });
+
   [...wsServer.clients]
     .filter((o) => o.readyState === WebSocket.OPEN)
     .forEach((o) => o.send(JSON.stringify(userState)));

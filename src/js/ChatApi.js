@@ -47,11 +47,18 @@ export default class ChatApi {
 
   /**
    * Подключение к WebSocket-серверу.
+   * При открытии соединения отправляем серверу сообщение enter с данными
+   * пользователя — сервер привязывает пользователя к соединению и удаляет
+   * его из списка при разрыве (ws.on('close')), даже если exit не успел уйти.
    * handlers: { onUsers(list), onMessage(msg), onClose() }
    */
-  connect(handlers) {
+  connect(user, handlers) {
     const wsUrl = this.baseUrl.replace(/^http/, 'ws');
     this.ws = new WebSocket(wsUrl);
+
+    this.ws.addEventListener('open', () => {
+      this.send({ type: 'enter', user });
+    });
 
     this.ws.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);

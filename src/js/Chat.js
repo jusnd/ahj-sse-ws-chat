@@ -45,7 +45,7 @@ export default class Chat {
       return;
     }
 
-    this.api.connect({
+    this.api.connect(this.user, {
       onUsers: (users) => this.renderUsers(users),
       onMessage: (msg) => this.renderMessage(msg),
       onClose: () => this.onDisconnect(),
