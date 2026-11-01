@@ -57,4 +57,9 @@ npm start
 ## Деплой
 
 - **Frontend** собирается Webpack и деплоится на GitHub Pages через GitHub Actions при каждом пуше (см. `.github/workflows/web.yml`).
-- **Backend** нужно развернуть на Render (папка `backend`, команда запуска `npm start`), затем подставить полученный URL в константу `PROD_SERVER_URL` в `src/js/ChatApi.js`.
+- **Backend** деплоится на Render:
+  1. [render.com](https://render.com) → **New → Web Service** → подключить этот репозиторий.
+  2. Настройки: **Root Directory** — `backend`, **Runtime** — `Node`, **Build Command** — `npm install`, **Start Command** — `npm start`, **Instance Type** — `Free`.
+  3. Environment Variables: `NODE_VERSION = 20` (сервер рассчитан на Node < 22).
+  4. **Create Web Service** → полученный URL вида `https://<имя>.onrender.com` подставить в константу `PROD_SERVER_URL` в `src/js/ChatApi.js` и запушить — Actions автоматически обновит GitHub Pages.
+  5. На Free-тарифе сервис засыпает после ~15 минут простоя: первый вход после паузы может занять до минуты — просто повторите отправку никнейма.
